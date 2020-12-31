@@ -1,0 +1,3 @@
+[submodule "contrib/ansible-modules-syncthing"]
+	path = contrib/ansible-modules-syncthing
+	url = https://github.com/bibz/ansible-modules-syncthing.git
