@@ -1,0 +1,78 @@
+---
+
+# Assumptions:
+# - systemd
+# - `syncthing` package; ships with systemd configuration
+#
+# Tested on:
+# - Raspberry Pi OS Lite 2020-12-02 (Raspbian/Debian Buster)
+
+- name: Install and configure Syncthing
+  hosts: syncthing
+  vars:
+    fs_inotify_max_user_watches: 20480
+    # The number of watches (files) allowed per user.
+    # Keep in mind that each used watch is 1KiB/540B (64bits/32bits).
+    syncthing_user: syncthing
+    syncthing_group: syncthing
+
+  tasks:
+    - name: Install Syncthing
+      become: true
+      ansible.builtin.package:
+        name: syncthing
+        state: present
+        install_recommends: false
+
+    - name: Create the service group ({{ syncthing_user }})
+      become: true
+      ansible.builtin.group:
+        name: '{{ syncthing_group }}'
+        state: present
+        system: yes
+
+    - name: Create the service user ({{ syncthing_user }})
+      become: true
+      ansible.builtin.user:
+        name: '{{ syncthing_user }}'
+        group: '{{ syncthing_group }}'
+        system: yes
+
+    - name: Create local sysctl directories
+      become: true
+      ansible.builtin.file:
+        path: /usr/lib/sysctl.d/
+        owner: root
+        group: root
+        mode: 0644
+        state: directory
+
+    - name: Configure fs.inotify.max_user_watches
+      # The configuration will be read from the next reboot onwards.
+      # After this task, apply the change to the running kernel.
+      become: true
+      ansible.builtin.copy:
+        content: fs.inotify.max_user_watches={{ fs_inotify_max_user_watches }}
+        dest: /usr/lib/sysctl.d/90-syncthing.conf
+        owner: root
+        group: root
+        mode: 0644
+      notify:
+        - Apply fs.inotify.max_user_watches
+
+    - name: Enable Syncthing service on boot
+      become: true
+      ansible.builtin.service:
+        name: syncthing@{{ syncthing_user }}.service
+        enabled: yes
+
+    - name: Start Syncthing service
+      become: true
+      ansible.builtin.service:
+        name: syncthing@{{ syncthing_user }}.service
+        state: started
+
+  handlers:
+    - name: Apply fs.inotify.max_user_watches
+      become: true
+      ansible.builtin.command: sysctl fs.inotify.max_user_watches={{ fs_inotify_max_user_watches }}
