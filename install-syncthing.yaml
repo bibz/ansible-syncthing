@@ -9,12 +9,6 @@
 
 - name: Install and configure Syncthing
   hosts: syncthing
-  vars:
-    fs_inotify_max_user_watches: 20480
-    # The number of watches (files) allowed per user.
-    # Keep in mind that each used watch is 1KiB/540B (64bits/32bits).
-    syncthing_user: syncthing
-    syncthing_group: syncthing
 
   tasks:
     - name: Install Syncthing

@@ -25,6 +25,8 @@ Tested against a Raspberry Pi 1B rev2.
 Assuming you have a local inventory, e.g. copy `hosts.example` to `hosts` and
 list your own target machines for the `syncthing` group.
 
+See `host_vars/raspberrypi.example` for the required (and an example of) variables.
+
 ```
-% ansible-playbook -i hosts site.yaml
+% ansible-playbook -i hosts install-syncthing.yaml
 ```
