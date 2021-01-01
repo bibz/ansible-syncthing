@@ -1,0 +1,14 @@
+---
+- name: Configure the Syncthing devices
+  hosts: syncthing
+
+  tasks:
+    - name: Ensure the expected devices are known
+      become: yes  # We need access to the configuration file to discover the API key.
+      syncthing_device:
+        id: "{{ item.id }}"
+        name: "{{ item.name }}"
+        config_file: /home/{{ syncthing_user }}/.config/syncthing/config.xml
+      loop: "{{ syncthing_devices }}"
+      loop_control:
+        label: "{{ item.name }}"

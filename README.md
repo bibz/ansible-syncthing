@@ -6,8 +6,9 @@ nodes.
 ## Features
 
 - [X] Deploy Syncthing to headless machines
-- [ ] Configure the known devices
+- [X] Configure the known devices
 - [ ] Configure the shared folders
+- [ ] Refer to headless machines by their host, not their device ID
 
 ## Requirements
 
@@ -29,4 +30,13 @@ See `host_vars/raspberrypi.example` for the required (and an example of) variabl
 
 ```
 % ansible-playbook -i hosts install-syncthing.yaml
+% ansible-playbook -i hosts configure-devices.yaml
 ```
+
+## Caveats
+
+- The installation playbook is idempotent, but we don't know know the target's
+  device ID in advance (we let Syncthing generate everything). This means the
+  steps described above are not 100% automatic. After having installed Syncthing
+  on all targets, we have to stop and fill in the device ID's in the host
+  variables.
