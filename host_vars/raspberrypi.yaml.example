@@ -7,3 +7,14 @@ syncthing_group: syncthing
 syncthing_devices:
   - id: ...  # The device canonical ID
     name: ...  # The device nickname
+
+syncthing_folders:
+  - id: default
+    label: Default Folder
+    path: /mnt/media/Sync
+    fs_watcher: no  # Since it is read-only, no point in registering watchers
+    ignore_perms: no  # Since it is read-only, should not really matter
+    type: receiveonly  # Read-only copy! The host simply mirrors the data
+    devices:
+      - THE-LOCAL-DEVICE-OWN-ID  # Yes, we need to explicitly set this one
+      - ...  # Any other device to share the folder with

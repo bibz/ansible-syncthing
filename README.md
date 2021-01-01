@@ -7,8 +7,9 @@ nodes.
 
 - [X] Deploy Syncthing to headless machines
 - [X] Configure the known devices
-- [ ] Configure the shared folders
+- [X] Configure the shared folders
 - [ ] Refer to headless machines by their host, not their device ID
+- [ ] Automatically reference local host in shared folders' devices
 
 ## Requirements
 
@@ -31,6 +32,7 @@ See `host_vars/raspberrypi.example` for the required (and an example of) variabl
 ```
 % ansible-playbook -i hosts install-syncthing.yaml
 % ansible-playbook -i hosts configure-devices.yaml
+% ansible-playbook -i hosts configure-folders.yaml
 ```
 
 ## Caveats
@@ -40,3 +42,7 @@ See `host_vars/raspberrypi.example` for the required (and an example of) variabl
   steps described above are not 100% automatic. After having installed Syncthing
   on all targets, we have to stop and fill in the device ID's in the host
   variables.
+
+- Another effect of not knowing what each target's device ID is, is that the
+  host variables defining shared folders must list all devices *including the
+  local one*.

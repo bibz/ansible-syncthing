@@ -1,0 +1,19 @@
+---
+- name: Configure the Syncthing folders
+  hosts: syncthing
+
+  tasks:
+    - name: Ensure the expected folders are shared
+      become: yes  # We need access to the configuration file to discover the API key.
+      syncthing_folder:
+        id: "{{ item.id }}"
+        label: "{{ item.label }}"
+        path: "{{ item.path }}"
+        ignore_perms: "{{ item.ignore_perms }}"
+        type: "{{ item.type }}"
+        fs_watcher: "{{ item.fs_watcher }}"
+        devices: "{{ item.devices }}"
+        config_file: /home/{{ syncthing_user }}/.config/syncthing/config.xml
+      loop: "{{ syncthing_folders }}"
+      loop_control:
+        label: "{{ item.label }} ({{ item.id }})"
