@@ -16,11 +16,19 @@ nodes.
 [Setup Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
 on the host.
 
-The target machines must be accessible to Ansible.
+The target machines must be accessible to Ansible (i.e. install Python 3).
 Simply make sure you can SSH to them without password (either through your own
 SSH public key or SSH keyring).
 
-Tested against a Raspberry Pi 1B rev2.
+Note that by default Ansible expects `sudo` on the target machine.
+See [the documentation on *become*](https://docs.ansible.com/ansible/latest/plugins/become.html)
+on how to use an alternative privilege escalation command. You will likely need
+the additional flags `become-method` and `ask-become-pass`. E.g.
+`ansible-playbook -i hosts --become-method su --ask-become-pass install-syncthing.yaml`.
+
+Tested against:
+- Raspberry Pi 1B rev2 running Raspbian Buster
+- Raspberry Pi 4B running Debian Buster
 
 ## Usage
 
