@@ -9,43 +9,38 @@
 
 - name: Install and configure Syncthing
   hosts: syncthing
+  become: yes
 
   tasks:
     - name: Install Syncthing
-      become: true
       ansible.builtin.package:
         name: syncthing
         state: present
         install_recommends: false
 
     - name: Create the service group ({{ syncthing_user }})
-      become: true
       ansible.builtin.group:
         name: '{{ syncthing_group }}'
         state: present
         system: yes
 
     - name: Create the service user ({{ syncthing_user }})
-      become: true
       ansible.builtin.user:
         name: '{{ syncthing_user }}'
         group: '{{ syncthing_group }}'
         system: yes
 
     - name: Configure fs.inotify.max_user_watches
-      become: true
       ansible.posix.sysctl:
         name: fs.inotify.max_user_watches
         value: "{{ fs_inotify_max_user_watches }}  # Force YAML string but not sysctl string"
 
     - name: Enable Syncthing service on boot
-      become: true
       ansible.builtin.service:
         name: syncthing@{{ syncthing_user }}.service
         enabled: yes
 
     - name: Start Syncthing service
-      become: true
       ansible.builtin.service:
         name: syncthing@{{ syncthing_user }}.service
         state: started
