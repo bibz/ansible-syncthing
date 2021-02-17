@@ -32,27 +32,11 @@
         group: '{{ syncthing_group }}'
         system: yes
 
-    - name: Create local sysctl directories
-      become: true
-      ansible.builtin.file:
-        path: /usr/lib/sysctl.d/
-        owner: root
-        group: root
-        mode: 0644
-        state: directory
-
     - name: Configure fs.inotify.max_user_watches
-      # The configuration will be read from the next reboot onwards.
-      # After this task, apply the change to the running kernel.
       become: true
-      ansible.builtin.copy:
-        content: fs.inotify.max_user_watches={{ fs_inotify_max_user_watches }}
-        dest: /usr/lib/sysctl.d/90-syncthing.conf
-        owner: root
-        group: root
-        mode: 0644
-      notify:
-        - Apply fs.inotify.max_user_watches
+      ansible.posix.sysctl:
+        name: fs.inotify.max_user_watches
+        value: "{{ fs_inotify_max_user_watches }}  # Force YAML string but not sysctl string"
 
     - name: Enable Syncthing service on boot
       become: true
@@ -65,8 +49,3 @@
       ansible.builtin.service:
         name: syncthing@{{ syncthing_user }}.service
         state: started
-
-  handlers:
-    - name: Apply fs.inotify.max_user_watches
-      become: true
-      ansible.builtin.command: sysctl fs.inotify.max_user_watches={{ fs_inotify_max_user_watches }}
