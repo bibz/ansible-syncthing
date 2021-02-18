@@ -16,5 +16,6 @@ syncthing_folders:
     ignore_perms: no  # Since it is read-only, should not really matter
     type: receiveonly  # Read-only copy! The host simply mirrors the data
     devices:
-      - THE-LOCAL-DEVICE-OWN-ID  # Yes, we need to explicitly set this one
+      - A-DEVICE-ID-AS-LISTED-ABOVE
+      - A-DEVICE-NAME-AS-DEFINED-ABOVE
       - ...  # Any other device to share the folder with
