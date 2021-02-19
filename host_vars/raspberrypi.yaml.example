@@ -4,9 +4,11 @@ fs_inotify_max_user_watches: 20480
 # Keep in mind that each used watch is 1KiB/540B (64bits/32bits).
 syncthing_user: syncthing
 syncthing_group: syncthing
-syncthing_devices:
-  - id: ...  # The device canonical ID
-    name: ...  # The device nickname
+
+# Optional overload of the devices defined in the group vars.
+# syncthing_devices:
+#  - id: ...  # A device canonical ID
+#    name: ...  # A device nickname
 
 syncthing_folders:
   - id: default

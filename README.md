@@ -35,7 +35,12 @@ Tested against:
 Assuming you have a local inventory, e.g. copy `hosts.example` to `hosts` and
 list your own target machines for the `syncthing` group.
 
-See `host_vars/raspberrypi.example` for the required (and an example of) variables.
+See `host_vars/raspberrypi.yaml.example` for the required (and an example of)
+variables.
+
+You might want to define the known devices at the group level
+(`group_vars/syncthing.yaml.example`) if all devices know each other. In such
+a case, there is no need to individually overload the devices per host.
 
 ```
 % ansible-playbook -i hosts install-syncthing.yaml

@@ -1,0 +1,7 @@
+---
+# Define the default Syncthing devices that will get used unless overloaded
+# in the host configuration.
+syncthing_devices:
+  - id: ...  # A device canonical ID
+    name: ...  # A device nickname
+  - ...  # and more
