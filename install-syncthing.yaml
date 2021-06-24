@@ -12,10 +12,40 @@
   become: yes
 
   tasks:
+    - name: Define public key
+      # upstream at https://syncthing.net/release-key.gpg
+      ansible.builtin.copy:
+        dest: /usr/share/keyrings/syncthing-archive-keyring.gpg
+        owner: root
+        group: root
+        mode: u=rw,g=r,o=r
+        src: syncthing-release-key.gpg
+
+    - name: Define dedicated APT repository
+      ansible.builtin.copy:
+        dest: /etc/apt/sources.list.d/syncthing.list
+        owner: root
+        group: root
+        mode: u=rw,g=r,o=r
+        content:
+          deb [signed-by=/usr/share/keyrings/syncthing-archive-keyring.gpg]
+          https://apt.syncthing.net/ syncthing stable
+
+    - name: Define dedicated APT repository
+      ansible.builtin.copy:
+        dest: /etc/apt/preferences.d/syncthing
+        owner: root
+        group: root
+        mode: u=rw,g=r,o=r
+        content: |
+          Package: *
+          Pin: origin apt.syncthing.net
+          Pin-Priority: 990
+
     - name: Install Syncthing
       ansible.builtin.package:
         name: syncthing
-        state: present
+        state: latest
         install_recommends: false
 
     - name: Create the service group ({{ syncthing_user }})
@@ -40,7 +70,7 @@
         name: syncthing@{{ syncthing_user }}.service
         enabled: yes
 
-    - name: Start Syncthing service
+    - name: (Re-)Start Syncthing service
       ansible.builtin.service:
         name: syncthing@{{ syncthing_user }}.service
-        state: started
+        state: restarted
