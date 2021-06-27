@@ -14,6 +14,7 @@
         fs_watcher: "{{ item.fs_watcher }}"
         devices: "{{ item.devices }}"
         config_file: /home/{{ syncthing_user }}/.config/syncthing/config.xml
+        state: "{{ item.state | default('present') }}"
       loop: "{{ syncthing_folders }}"
       loop_control:
         label: "{{ item.label }} ({{ item.id }})"
