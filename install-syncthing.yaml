@@ -47,6 +47,7 @@
         name: syncthing
         state: latest
         install_recommends: false
+        update_cache: yes
 
     - name: Create the service group ({{ syncthing_user }})
       ansible.builtin.group:
